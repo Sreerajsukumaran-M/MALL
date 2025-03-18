@@ -1,0 +1,211 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Mall - Member Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .decorative-shapes {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            filter: blur(30px);
+        }
+
+        .shape1 { top: -50px; left: -50px; }
+        .shape2 { bottom: -80px; right: -60px; }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 500px;
+            z-index: 1;
+            transform: translateY(0);
+            transition: transform 0.4s ease;
+        }
+
+        .login-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .mall-branding {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .mall-logo {
+            width: 80px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        h2 {
+            color: #2d3436;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #4ecdc4, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            padding-left: 45px;
+        }
+
+        .input-field:focus {
+            border-color: #4ecdc4;
+            box-shadow: 0 0 15px rgba(78, 205, 196, 0.2);
+            outline: none;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            transition: color 0.3s ease;
+        }
+
+        .input-field:focus ~ .input-icon {
+            color: #4ecdc4;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .show-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+
+        .show-password:hover {
+            color: #4ecdc4;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #4ecdc4, #ff6b6b);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            color: #666;
+        }
+
+        .register-link a {
+            color: #ff6b6b;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .register-link a:hover {
+            color: #4ecdc4;
+        }
+    </style>
+</head>
+<body>
+    <div class="decorative-shapes shape1"></div>
+    <div class="decorative-shapes shape2"></div>
+
+    <div class="login-container">
+        <div class="mall-branding">
+            <img src="{% static 'img/logo.png' %}" alt="Luxury Mall" class="mall-logo">
+            <h2>Exclusive Member Access</h2>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <i class="fas fa-user input-icon"></i>
+                <input type="text" class="input-field" name="username" placeholder="Username" required>
+            </div>
+
+            <div class="form-group password-container">
+                <i class="fas fa-lock input-icon"></i>
+                <input type="password" class="input-field" id="password" name="password" placeholder="Password" required>
+                <span class="show-password" onclick="togglePassword()"><i class="fas fa-eye"></i></span>
+            </div>
+
+            <button type="submit" class="login-btn">Unlock Benefits <i class="fas fa-arrow-right"></i></button>
+        </form>
+
+        <div class="register-link">
+            New to Luxury Mall? <a href="{% url 'register_customer' %}">Join Now</a>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const eyeIcon = document.querySelector('.show-password i');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                eyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                eyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+    </script>
+</body>
+</html>
