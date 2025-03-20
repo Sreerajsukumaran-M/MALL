@@ -11,20 +11,30 @@
             height: 100vh;
             position: fixed;
             left: 0;
+            width: 250px;
             background: #2f4050;
+            padding: 15px;
         }
         .main-content {
-            margin-left: 250px;
+            margin-left: 260px;
+            padding: 20px;
         }
         .card-icon {
             font-size: 2.5rem;
             opacity: 0.7;
         }
+        .profile-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 <body>
     <!-- Sidebar -->
-    <div class="sidebar text-white w-250 p-3">
+    <div class="sidebar text-white">
         <h3 class="mb-4"><i class="bi bi-shop"></i> Shop Manager</h3>
         <ul class="nav nav-pills flex-column">
             <li class="nav-item mb-2">
@@ -51,12 +61,49 @@
     </div>
 
     <!-- Main Content -->
-    <div class="main-content p-4">
+    <div class="main-content">
         <!-- Header -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4>Welcome Back, {{ user.username }}!</h4>
-            <div class="text-muted">
-                <i class="bi bi-person-circle me-2"></i>{{ user.role }}
+
+            <!-- Profile Dropdown -->
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    {% if user.image %}
+                        <img src="{{ user.image.url }}" class="rounded-circle me-2" width="40" height="40" alt="Profile">
+                    {% else %}
+                        <img src="https://via.placeholder.com/40" class="rounded-circle me-2" width="40" height="40" alt="Default Profile">
+                    {% endif %}
+                    <span>{{ user.username }}</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="profileDropdown">
+                    <li class="text-center p-3">
+                        {% if user.image %}
+                            <img src="{{ user.image.url }}" class="profile-img mb-2" alt="Profile">
+                        {% else %}
+                            <img src="https://via.placeholder.com/80" class="profile-img mb-2" alt="Default Profile">
+                        {% endif %}
+                        <h6 class="mb-0">{{ user.username }}</h6>
+                        <small class="text-muted">{{ user.email }}</small>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li class="px-3">
+                        <dl class="row mb-0">
+                            <dt class="col-4">Role:</dt>
+                            <dd class="col-8">{{ user.role }}</dd>
+                            <dt class="col-4">Phone:</dt>
+                            <dd class="col-8">{{ user.phone|default:"Not provided" }}</dd>
+                            <dt class="col-4">Shop Category:</dt>
+                            <dd class="col-8">{{ user.shop_category|default:"Not assigned" }}</dd>
+                        </dl>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li class="text-center p-2">
+                        <a href="{% url 'update_profile' %}" class="btn btn-primary btn-sm w-100">
+                            <i class="bi bi-pencil-square"></i> Edit Profile
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
 
@@ -91,54 +138,26 @@
             </div>
         </div>
 
-        <!-- User Info Card -->
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card shadow">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0"><i class="bi bi-person-badge me-2"></i>Account Details</h5>
-                    </div>
-                    <div class="card-body">
-                        <dl class="row">
-                            <dt class="col-sm-4">Username:</dt>
-                            <dd class="col-sm-8">{{ user.username }}</dd>
-
-                            <dt class="col-sm-4">Email:</dt>
-                            <dd class="col-sm-8">{{ user.email }}</dd>
-
-                            <dt class="col-sm-4">Account Type:</dt>
-                            <dd class="col-sm-8">{{ user.role }}</dd>
-
-                            <dt class="col-sm-4">Last Login:</dt>
-                            <dd class="col-sm-8">2 hours ago</dd>
-                        </dl>
-                    </div>
-                </div>
+        <!-- Recent Activity -->
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="card-title mb-0"><i class="bi bi-clock-history me-2"></i> Recent Activity</h5>
             </div>
-
-            <!-- Recent Activity -->
-            <div class="col-md-6">
-                <div class="card shadow">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0"><i class="bi bi-clock-history me-2"></i>Recent Activity</h5>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                New order received
-                                <span class="badge bg-primary">Just now</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Product "Winter Jacket" updated
-                                <span class="badge bg-secondary">15m ago</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                New customer registered
-                                <span class="badge bg-secondary">1h ago</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        New order received
+                        <span class="badge bg-primary">Just now</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Product "Winter Jacket" updated
+                        <span class="badge bg-secondary">15m ago</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        New customer registered
+                        <span class="badge bg-secondary">1h ago</span>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
